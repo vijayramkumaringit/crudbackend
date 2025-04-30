@@ -1,12 +1,10 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import {
   getItems,
-  // getItem,
   addItem,
   updateItem,
   deleteItem,
-} from '../controllers/items';
-import { login } from '../controllers/login';
+} from '../../controllers/items';
 
 const Item = {
   type: 'object',
@@ -21,22 +19,6 @@ export default function itemRoutes(
   _options: FastifyPluginOptions,
   done: () => void
 ) {
-  fastify.post('/login', {
-    schema: {
-      body: {
-        type: 'object',
-        required: ['username', 'password'],
-        properties: {
-          username: { type: 'string' },
-          password: { type: 'string' },
-        },
-      },
-      response: {
-        200: { type: 'object', properties: { token: { type: 'string' } } },
-      },
-    },
-    handler: login,
-  });
 
   fastify.get('/items', {      
     preHandler: [fastify.authenticate],schema: {
@@ -49,23 +31,7 @@ export default function itemRoutes(
     },
     handler: getItems,
   });
-
-  // fastify.get('/items/:id', {
-  //   preHandler: [fastify.authenticate],
-  //   schema: {
-  //     response: {
-  //       200: Item,
-  //       404: {
-  //         type: 'object',
-  //         properties: {
-  //           message: { type: 'string' },
-  //         },
-  //       },
-  //     },
-  //   },
-  //   handler: getItem,
-  // });
-
+  
   fastify.post('/items', {
     preHandler: [fastify.authenticate],
     schema: {
@@ -121,5 +87,4 @@ export default function itemRoutes(
   });
 
   done();
-  
 }
