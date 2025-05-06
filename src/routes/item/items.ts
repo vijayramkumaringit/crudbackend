@@ -1,16 +1,16 @@
-import { FastifyInstance, FastifyPluginOptions } from 'fastify';
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import {
   getItems,
   addItem,
   updateItem,
   deleteItem,
-} from '../../controllers/items';
+} from "../../controllers/item/items";
 
 const Item = {
-  type: 'object',
+  type: "object",
   properties: {
-    id: { type: 'string' },
-    name: { type: 'string' },
+    id: { type: "string" },
+    name: { type: "string" },
   },
 };
 
@@ -19,27 +19,27 @@ export default function itemRoutes(
   _options: FastifyPluginOptions,
   done: () => void
 ) {
-
-  fastify.get('/items', {      
-    preHandler: [fastify.authenticate],schema: {
+  fastify.get("/items", {
+    preHandler: [fastify.authenticate],
+    schema: {
       response: {
         200: {
-          type: 'array',
+          type: "array",
           items: Item,
         },
       },
     },
     handler: getItems,
   });
-  
-  fastify.post('/items', {
+
+  fastify.post("/items", {
     preHandler: [fastify.authenticate],
     schema: {
       body: {
-        type: 'object',
-        required: ['name'],
+        type: "object",
+        required: ["name"],
         properties: {
-          name: { type: 'string' },
+          name: { type: "string" },
         },
       },
       response: {
@@ -49,21 +49,21 @@ export default function itemRoutes(
     handler: addItem,
   });
 
-  fastify.put('/items/:id', {
+  fastify.put("/items/:id", {
     preHandler: [fastify.authenticate],
     schema: {
       body: {
-        type: 'object',
-        required: ['name'],
+        type: "object",
+        required: ["name"],
         properties: {
-          name: { type: 'string' },
+          name: { type: "string" },
         },
       },
       response: {
         200: {
-          type: 'object',
+          type: "object",
           properties: {
-            message: { type: 'string' },
+            message: { type: "string" },
           },
         },
       },
@@ -71,14 +71,14 @@ export default function itemRoutes(
     handler: updateItem,
   });
 
-  fastify.delete('/items/:id', {
+  fastify.delete("/items/:id", {
     preHandler: [fastify.authenticate],
     schema: {
       response: {
         200: {
-          type: 'object',
+          type: "object",
           properties: {
-            message: { type: 'string' },
+            message: { type: "string" },
           },
         },
       },

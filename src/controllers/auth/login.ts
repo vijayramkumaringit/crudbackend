@@ -1,19 +1,20 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
-import prisma from '../../prisma';
-import bcrypt from 'bcrypt'; 
+import { FastifyReply, FastifyRequest } from "fastify";
 
-export const login = async (
+import bcrypt from "bcrypt";
+import prisma from "../../../prisma";
+
+export const loginController = async (
   req: FastifyRequest<{ Body: { username: string; password: string } }>,
   reply: FastifyReply
 ): Promise<void> => {
   const { username, password } = req.body;
 
   if (!username) {
-    return reply.code(400).send({ message: 'Username is required' });
+    return reply.code(400).send({ message: "Username is required" });
   }
 
   if (!password) {
-    return reply.code(400).send({ message: 'Password is required' });
+    return reply.code(400).send({ message: "Password is required" });
   }
 
   try {
@@ -22,13 +23,12 @@ export const login = async (
     });
 
     if (!user) {
-      return reply.code(401).send({ message: 'Invalid username' });
+      return reply.code(401).send({ message: "Invalid username" });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-     return reply.code(401).send({ message: 'Invalid password' });
-      
+      return reply.code(401).send({ message: "Invalid password" });
     }
 
     const token = await reply.jwtSign({ username: user.name });
@@ -36,6 +36,6 @@ export const login = async (
     reply.send({ token });
   } catch (error) {
     console.error(error);
-    reply.code(500).send({ message: 'Login failed', error });
+    reply.code(500).send({ message: "Login failed", error });
   }
 };
